@@ -58,8 +58,11 @@ void SerialCommand::addCommand(const char *command, void (*function)()) {
       #endif
       return;
     }
-  strncpy(_commandList[_commandCount].command, command, SERIALCOMMAND_MAXCOMMANDLENGTH);
-  _commandList[_commandCount].function = function;
+  //make a new callback
+  struct SerialCommandCallback new_callback;
+  new_callback.command  = command;
+  new_callback.function = function;
+  _commandList[_commandCount] = new_callback;
   _commandCount++;
 }
 
@@ -103,7 +106,7 @@ void SerialCommand::readSerial() {
           #endif
 
           // Compare the found command against the list of known commands for a match
-          if (strncmp(command, _commandList[i].command, SERIALCOMMAND_MAXCOMMANDLENGTH) == 0) {
+          if (strcmp(command, _commandList[i].command) == 0) {
             #ifdef SERIALCOMMAND_DEBUG
               Serial.print("Matched Command: ");
               Serial.println(command);

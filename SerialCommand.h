@@ -35,19 +35,18 @@
 
 // Size of the input buffer in bytes (maximum length of one command plus arguments)
 #define SERIALCOMMAND_BUFFER 64
-// Maximum length of a command excluding the terminating null
-#define SERIALCOMMAND_MAXCOMMANDLENGTH 16
 
 #define SERIALCOMMAND_MAXCOMMANDS_DEFAULT 10
 
 // Uncomment the next line to run the library in debug mode (verbose messages)
-//#define SERIALCOMMAND_DEBUG
+#define SERIALCOMMAND_DEBUG
 
 
 class SerialCommand {
   public:
     SerialCommand(int maxCommands = SERIALCOMMAND_MAXCOMMANDS_DEFAULT); // Constructor
-    void addCommand(const char *command, void(*function)());  // Add a command to the processing dictionary.
+    void addCommand(const char *command, void(*function)());           // Add a command to the processing dictionary.
+    void addCommand(__FlashStringHelper *command, void(*function)());  // Add a command to the processing dictionary.
     void setDefaultHandler(void (*function)(const char *));   // A handler to call when no valid command received.
 
     void readSerial();    // Main entry point.
@@ -57,7 +56,7 @@ class SerialCommand {
   private:
     // Command/handler dictionary
     struct SerialCommandCallback {
-      char *command;
+      const char *command;
       void (*function)();
     };                                     // Data structure to hold Command/Handler function key-value pairs
     SerialCommandCallback *_commandList;   // Actual definition for command/handler array
