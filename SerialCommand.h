@@ -39,7 +39,7 @@
 #define SERIALCOMMAND_MAXCOMMANDS_DEFAULT 10
 
 // Uncomment the next line to run the library in debug mode (verbose messages)
-#define SERIALCOMMAND_DEBUG
+//#define SERIALCOMMAND_DEBUG
 
 
 class SerialCommand {
