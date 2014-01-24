@@ -32,6 +32,7 @@
   #include <WProgram.h>
 #endif
 #include <string.h>
+#include <Stream.h>
 
 // Size of the input buffer in bytes (maximum length of one command plus arguments)
 #define SERIALCOMMAND_BUFFER 64
@@ -44,7 +45,9 @@
 
 class SerialCommand {
   public:
-    SerialCommand(int maxCommands = SERIALCOMMAND_MAXCOMMANDS_DEFAULT); // Constructor
+    SerialCommand(Stream &port,
+                  int maxCommands = SERIALCOMMAND_MAXCOMMANDS_DEFAULT
+                 );       // Constructor
     void addCommand(const char *command, void(*function)());           // Add a command to the processing dictionary.
     void addCommand(__FlashStringHelper *command, void(*function)());  // Add a command to the processing dictionary.
     void setDefaultHandler(void (*function)(const char *));   // A handler to call when no valid command received.
@@ -54,6 +57,8 @@ class SerialCommand {
     char *next();         // Returns pointer to next token found in command buffer (for getting arguments to commands).
 
   private:
+    //Stream object for data IO
+    Stream &_port;
     // Command/handler dictionary
     struct SerialCommandCallback {
       const char *command;

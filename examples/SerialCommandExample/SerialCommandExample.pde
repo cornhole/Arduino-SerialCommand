@@ -1,12 +1,12 @@
 // Demo Code for SerialCommand Library
-// Steven Cogswell
-// May 2011
+// Craig Versek, Jan 2014
+// based on code from Steven Cogswell, May 2011
 
 #include <SerialCommand.h>
 
 #define arduinoLED 13   // Arduino LED on board
 
-SerialCommand sCmd;     // The demo SerialCommand object
+SerialCommand sCmd(Serial);         // The demo SerialCommand object, initialize with any Stream object
 
 void setup() {
   pinMode(arduinoLED, OUTPUT);      // Configure the onboard LED for output

@@ -2,11 +2,11 @@
  * SerialCommand - A Wiring/Arduino library to tokenize and parse commands
  * received over a serial port.
  * 
+ * Copyright (C) 2014 Craig Versek
  * Copyright (C) 2012 Stefan Rado
  * Copyright (C) 2011 Steven Cogswell <steven.cogswell@gmail.com>
  *                    http://husks.wordpress.com
  * 
- * Version 20120522
  * 
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,8 +26,11 @@
 /**
  * Constructor makes sure some things are set.
  */
-SerialCommand::SerialCommand(int maxCommands)
-  : _commandList(NULL),
+SerialCommand::SerialCommand(Stream &port,
+                             int maxCommands
+                            )
+  : _port(port),           // reference must be initialized right away
+    _commandList(NULL),
     _commandCount(0),
     _defaultHandler(NULL),
     _term('\n'),           // default terminator for commands, newline character
@@ -82,12 +85,12 @@ void SerialCommand::setDefaultHandler(void (*function)(const char *)) {
  */
 void SerialCommand::readSerial() {
   while (Serial.available() > 0) {
-    char inChar = Serial.read();   // Read single available character, there may be more waiting
+    char inChar = _port.read();   // Read single available character, there may be more waiting
     #ifdef SERIALCOMMAND_DEBUG
-      Serial.print(inChar);   // Echo back to serial stream
+      Serial.print(inChar);       // Echo back to serial stream
     #endif
 
-    if (inChar == _term) {     // Check for the terminator (default '\r') meaning end of command
+    if (inChar == _term) {        // Check for the terminator (default '\r') meaning end of command
       #ifdef SERIALCOMMAND_DEBUG
         Serial.print("Received: ");
         Serial.println(_buffer);
