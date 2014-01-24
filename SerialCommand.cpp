@@ -48,7 +48,7 @@ SerialCommand::SerialCommand(Stream &port,
  * This is used for matching a found token in the buffer, and gives the pointer
  * to the handler function to deal with it.
  */
-void SerialCommand::addCommand(const char *command, void (*function)()) {
+void SerialCommand::addCommand(const char *command, void (*function)(SerialCommand)) {
   #ifdef SERIALCOMMAND_DEBUG
     Serial.print("Adding command (");
     Serial.print(_commandCount);
@@ -73,7 +73,7 @@ void SerialCommand::addCommand(const char *command, void (*function)()) {
  * This sets up a handler to be called in the event that the receveived command string
  * isn't in the list of commands.
  */
-void SerialCommand::setDefaultHandler(void (*function)(const char *)) {
+void SerialCommand::setDefaultHandler(void (*function)(const char *, SerialCommand)) {
   _defaultHandler = function;
 }
 
@@ -115,14 +115,15 @@ void SerialCommand::readSerial() {
               Serial.println(command);
             #endif
 
-            // Execute the stored handler function for the command
-            (*_commandList[i].function)();
+            // Execute the stored handler function for the command,
+            // passing in the "this" current SerialCommand object
+            (*_commandList[i].function)(*this);
             matched = true;
             break;
           }
         }
         if (!matched && (_defaultHandler != NULL)) {
-          (*_defaultHandler)(command);
+          (*_defaultHandler)(command, *this);
         }
       }
       clearBuffer();

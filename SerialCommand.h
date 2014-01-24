@@ -48,9 +48,9 @@ class SerialCommand {
     SerialCommand(Stream &port,
                   int maxCommands = SERIALCOMMAND_MAXCOMMANDS_DEFAULT
                  );       // Constructor
-    void addCommand(const char *command, void(*function)());           // Add a command to the processing dictionary.
-    void addCommand(__FlashStringHelper *command, void(*function)());  // Add a command to the processing dictionary.
-    void setDefaultHandler(void (*function)(const char *));   // A handler to call when no valid command received.
+    void addCommand(const char *command, void(*function)(SerialCommand));           // Add a command to the processing dictionary.
+    void addCommand(__FlashStringHelper *command, void(*function)(SerialCommand));  // Add a command to the processing dictionary.
+    void setDefaultHandler(void (*function)(const char *, SerialCommand));                          // A handler to call when no valid command received.
 
     void readSerial();    // Main entry point.
     void clearBuffer();   // Clears the input buffer.
@@ -62,14 +62,14 @@ class SerialCommand {
     // Command/handler dictionary
     struct SerialCommandCallback {
       const char *command;
-      void (*function)();
+      void (*function)(SerialCommand);
     };                                     // Data structure to hold Command/Handler function key-value pairs
     SerialCommandCallback *_commandList;   // Actual definition for command/handler array
     int  _commandCount;
     int  _maxCommands;
 
     // Pointer to the default handler function
-    void (*_defaultHandler)(const char *);
+    void (*_defaultHandler)(const char *, SerialCommand);
 
     char _delim[2]; // null-terminated list of character to be used as delimeters for tokenizing (default " ")
     char _term;     // Character that signals end of command (default '\n')
