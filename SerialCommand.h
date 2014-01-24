@@ -42,19 +42,23 @@
 // Uncomment the next line to run the library in debug mode (verbose messages)
 //#define SERIALCOMMAND_DEBUG
 
-
-class SerialCommand {
+/******************************************************************************/
+// SerialCommand (extends Print) 
+// so that callbacks print 
+class SerialCommand : public Print {
   public:
     SerialCommand(Stream &port,
                   int maxCommands = SERIALCOMMAND_MAXCOMMANDS_DEFAULT
                  );       // Constructor
     void addCommand(const char *command, void(*function)(SerialCommand));           // Add a command to the processing dictionary.
     void addCommand(__FlashStringHelper *command, void(*function)(SerialCommand));  // Add a command to the processing dictionary.
-    void setDefaultHandler(void (*function)(const char *, SerialCommand));                          // A handler to call when no valid command received.
+    void setDefaultHandler(void (*function)(const char *, SerialCommand));          // A handler to call when no valid command received.
 
     void readSerial();    // Main entry point.
     void clearBuffer();   // Clears the input buffer.
     char *next();         // Returns pointer to next token found in command buffer (for getting arguments to commands).
+    //provide method for printing
+    size_t write(uint8_t val);
 
   private:
     //Stream object for data IO

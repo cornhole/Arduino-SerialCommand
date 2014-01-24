@@ -29,7 +29,7 @@ void loop() {
 
 
 void LED_on(SerialCommand this_scmd) {
-  Serial.println("LED on");
+  this_scmd.println("LED on");
   digitalWrite(arduinoLED, HIGH);
 }
 
@@ -42,11 +42,11 @@ void sayHello(SerialCommand this_scmd) {
   char *arg;
   arg = this_scmd.next();    // Get the next argument from the SerialCommand object buffer
   if (arg != NULL) {    // As long as it existed, take it
-    Serial.print("Hello ");
-    Serial.println(arg);
+    this_scmd.print("Hello ");
+    this_scmd.println(arg);
   }
   else {
-    Serial.println("Hello, whoever you are");
+    this_scmd.println("Hello, whoever you are");
   }
 }
 
@@ -55,31 +55,31 @@ void processCommand(SerialCommand this_scmd) {
   int aNumber;
   char *arg;
 
-  Serial.println("We're in processCommand");
+  this_scmd.println("We're in processCommand");
   arg = this_scmd.next();
   if (arg != NULL) {
     aNumber = atoi(arg);    // Converts a char string to an integer
-    Serial.print("First argument was: ");
-    Serial.println(aNumber);
+    this_scmd.print("First argument was: ");
+    this_scmd.println(aNumber);
   }
   else {
-    Serial.println("No arguments");
+    this_scmd.println("No arguments");
   }
 
   arg = this_scmd.next();
   if (arg != NULL) {
     aNumber = atol(arg);
-    Serial.print("Second argument was: ");
-    Serial.println(aNumber);
+    this_scmd.print("Second argument was: ");
+    this_scmd.println(aNumber);
   }
   else {
-    Serial.println("No second argument");
+    this_scmd.println("No second argument");
   }
 }
 
 // This gets set as the default handler, and gets called when no other command matches.
 void unrecognized(const char *command, SerialCommand this_scmd) {
-  Serial.print("Did not recognize \"");
-  Serial.print(command);
-  Serial.println("\" as a command.");
+  this_scmd.print("Did not recognize \"");
+  this_scmd.print(command);
+  this_scmd.println("\" as a command.");
 }

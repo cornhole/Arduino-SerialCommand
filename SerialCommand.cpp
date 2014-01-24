@@ -156,3 +156,10 @@ void SerialCommand::clearBuffer() {
 char *SerialCommand::next() {
   return strtok_r(NULL, _delim, &_last);
 }
+
+/*
+ * forward all writes to the encapsulated "port" Stream object
+ */
+size_t SerialCommand::write(uint8_t val) {
+  return _port.write(val);
+}
