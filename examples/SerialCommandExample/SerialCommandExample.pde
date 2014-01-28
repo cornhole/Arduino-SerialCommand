@@ -34,7 +34,7 @@ void LED_on(SerialCommand this_scmd) {
 }
 
 void LED_off(SerialCommand this_scmd) {
-  Serial.println("LED off");
+  this_scmd.println("LED off");
   digitalWrite(arduinoLED, LOW);
 }
 
