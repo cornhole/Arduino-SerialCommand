@@ -24,62 +24,67 @@ void setup() {
 }
 
 void loop() {
-  sCmd.readSerial();     // We don't do much, just process serial commands
+  int num_bytes = sCmd.readSerial();      // fill the buffer
+  if (num_bytes > 0){
+    sCmd.processCommand();  // process the command
+  }
+  delay(10);
 }
 
 
-void LED_on(SerialCommand this_scmd) {
-  this_scmd.println("LED on");
+void LED_on(SerialCommand this_sCmd) {
+  this_sCmd.println("LED on");
   digitalWrite(arduinoLED, HIGH);
 }
 
-void LED_off(SerialCommand this_scmd) {
-  this_scmd.println("LED off");
+void LED_off(SerialCommand this_sCmd) {
+  this_sCmd.println("LED off");
   digitalWrite(arduinoLED, LOW);
 }
 
-void sayHello(SerialCommand this_scmd) {
+void sayHello(SerialCommand this_sCmd) {
   char *arg;
-  arg = this_scmd.next();    // Get the next argument from the SerialCommand object buffer
+  arg = this_sCmd.next();    // Get the next argument from the SerialCommand object buffer
   if (arg != NULL) {    // As long as it existed, take it
-    this_scmd.print("Hello ");
-    this_scmd.println(arg);
+    this_sCmd.print("Hello ");
+    this_sCmd.println(arg);
   }
   else {
-    this_scmd.println("Hello, whoever you are");
+    this_sCmd.println("Hello, whoever you are");
   }
 }
 
 
-void processCommand(SerialCommand this_scmd) {
+void processCommand(SerialCommand this_sCmd) {
   int aNumber;
   char *arg;
 
-  this_scmd.println("We're in processCommand");
-  arg = this_scmd.next();
+  this_sCmd.println("We're in processCommand");
+  arg = this_sCmd.next();
   if (arg != NULL) {
     aNumber = atoi(arg);    // Converts a char string to an integer
-    this_scmd.print("First argument was: ");
-    this_scmd.println(aNumber);
+    this_sCmd.print("First argument was: ");
+    this_sCmd.println(aNumber);
   }
   else {
-    this_scmd.println("No arguments");
+    this_sCmd.println("No arguments");
   }
 
-  arg = this_scmd.next();
+  arg = this_sCmd.next();
   if (arg != NULL) {
     aNumber = atol(arg);
-    this_scmd.print("Second argument was: ");
-    this_scmd.println(aNumber);
+    this_sCmd.print("Second argument was: ");
+    this_sCmd.println(aNumber);
   }
   else {
-    this_scmd.println("No second argument");
+    this_sCmd.println("No second argument");
   }
 }
 
 // This gets set as the default handler, and gets called when no other command matches.
-void unrecognized(const char *command, SerialCommand this_scmd) {
-  this_scmd.print("Did not recognize \"");
-  this_scmd.print(command);
-  this_scmd.println("\" as a command.");
+void unrecognized(SerialCommand this_sCmd) {
+  SerialCommand::CommandInfo command = this_sCmd.getCurrentCommand();
+  this_sCmd.print("Did not recognize \"");
+  this_sCmd.print(command.name);
+  this_sCmd.println("\" as a command.");
 }
