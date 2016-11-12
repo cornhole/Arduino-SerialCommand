@@ -93,7 +93,7 @@ void SerialCommand::lookupCommandByName(char *name) {
       // Compare the found command against the list of known commands for a match
       if (strcmp(name, _commandList[i].name) == 0) {
         #ifdef SERIALCOMMAND_DEBUG
-        DEBUG_PORTl.print("matched command: ");
+        DEBUG_PORT.print("matched command: ");
         DEBUG_PORT.println(name);
         #endif
         _current_command = _commandList[i];
@@ -130,6 +130,9 @@ void SerialCommand::runCommand() {
  * buffer for a prefix command, and calls handlers setup by addCommand() member
  */
 int SerialCommand::readSerial() {
+  #ifdef SERIALCOMMAND_DEBUG
+  DEBUG_PORT.println("in SerialCommand::readSerial()");
+  #endif
   while (_port.available() > 0) {
     char inChar = _port.read();   // Read single available character, there may be more waiting
     #ifdef SERIALCOMMAND_DEBUG
@@ -137,7 +140,7 @@ int SerialCommand::readSerial() {
     #endif
     if (inChar == _term) {        // Check for the terminator (default '\r') meaning end of command
       #ifdef SERIALCOMMAND_DEBUG
-        DEBUG_PORT.print("Received: ");
+        DEBUG_PORT.print("\tReceived: ");
         DEBUG_PORT.println(_buffer);
       #endif
       return _bufPos;
@@ -148,7 +151,7 @@ int SerialCommand::readSerial() {
         _buffer[_bufPos] = '\0';      // Null terminate
       } else {
         #ifdef SERIALCOMMAND_DEBUG
-          DEBUG_PORT.println("Line buffer is full - increase SERIALCOMMAND_BUFFER");
+          DEBUG_PORT.println("\tLine buffer is full - increase SERIALCOMMAND_BUFFER");
         #endif
       }
     }
