@@ -37,7 +37,7 @@
 // Size of the input buffer in bytes (maximum length of one command plus arguments)
 #define SERIALCOMMAND_BUFFER 64
 
-#define SERIALCOMMAND_MAXCOMMANDS_DEFAULT 10
+#define SERIALCOMMAND_MAXCOMMANDS_DEFAULT 20
 
 // Uncomment the next line to run the library in debug mode (verbose messages)
 //#define SERIALCOMMAND_DEBUG
